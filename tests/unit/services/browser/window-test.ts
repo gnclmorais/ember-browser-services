@@ -38,4 +38,25 @@ module('Service | browser/window', function (hooks) {
       assert.equal(service.parent.location.href, loginPath);
     });
   });
+
+  module('related data is properly related', function () {
+    module('location', function (hooks) {
+      setupBrowserFakes(hooks, {
+        window: {
+          parent: { location: { href: '' } },
+        },
+      });
+
+      test('it works', function (assert) {
+        let service = this.owner.lookup('service:browser/window');
+        let loginPath = 'https://example.com/login';
+
+        service.parent.location.href = loginPath;
+
+        assert.equal(service.location.href, loginPath);
+        assert.equal(service.location.href, service.parent.location.href);
+        assert.equal(service.location, service.parent.location);
+      });
+    });
+  });
 });
